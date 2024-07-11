@@ -4,8 +4,10 @@
     "designResolution": {
       "width": 1080,
       "height": 1920,
-      "fitHeight": true
-    }
+      "fitHeight": true,
+      "fitWidth": false
+    },
+    "highQuality": false
   },
   "script": {
     "importMap": "project://import-map.json",
