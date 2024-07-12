@@ -6,9 +6,10 @@ const { ccclass, property } = _decorator;
 @ccclass('GameManager')
 export class GameManager extends Component {
 
-  private heroesData  ={};
+  private heroesData = {};
   private startingCurrency: number = 0;
-  private buildingsData = {}
+  private buildingsData = {};
+  private createdHeroe = {};
 
   @property([SpriteFrame])
   public spriteArrayCharacters: SpriteFrame[] = [];

@@ -1,4 +1,5 @@
 import { _decorator, Component, Node, ProgressBar, Sprite, SpriteFrame, } from 'cc';
+import { QueueEventType } from './QueueManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('QueueIconManager')
@@ -14,53 +15,43 @@ export class QueueIconManager extends Component {
     @property({ type: Sprite })
     public portrait: Sprite | null = null;
 
-    private processing = false
-    private currentCharacter = {};
-    private progress = 0
-    private timer = 0;
-    private duration = -1;
-    private callback;
+    private currentCharacter = null;
 
-    addToQueue(character, parentCallback) {
-        this.processing = true;
+    setup(character) {
         this.currentCharacter = character;
         this.portrait.spriteFrame = character.portrait;
         this.rank.spriteFrame = character.rankIcon;
         this.type.spriteFrame = character.typeIcon;
-        this.timer = 0;
-        this.duration = character.summonCooldown;
         this.progressBarComponent.progress = 0;
-        this.callback = parentCallback;
-    }
-
-    protected update(dt: number): void {
-        if (!this.processing) {
-            return
-        }
-        this.timer += dt;
-        if (this.timer <= this.duration) {
-            this.progressBarComponent.progress = ((this.timer * 100) / this.duration) / 100;
-        } else {
-            this.processing = false;
-            this.characterReady();
-        }
     }
 
     isAvaliable() {
-        return !this.processing;
+        return this.currentCharacter == null;
     }
 
     characterReady() {
-        this.currentCharacter = {};
+        this.currentCharacter = null;
         this.portrait.spriteFrame = null;
         this.rank.spriteFrame = null;
         this.type.spriteFrame = null;
-        this.remainingTime = -1;
         this.progressBarComponent.progress = 0;
-        console.log("READY")
-        this.callback();
+
     }
 
-}
+    setProgress(value) {
+        this.progressBarComponent.progress = value;
+    }
 
+    // handleEvent(event: QueueEvent) {
+    //     if(this.currentCharacter == null){
+    //         return
+    //     }
+    //     if (event.type === QueueEventType.PROCESS_END) {
+    //         this.characterReady()
+    //     }
+    //     if (event.type === QueueEventType.PROCESSING) {
+    //         this.progressBarComponent.progress = event.item;
+    //     }
+    // }
+}
 

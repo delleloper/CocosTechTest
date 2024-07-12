@@ -2638,6 +2638,12 @@
     "hireButton": {
       "__id__": 125
     },
+    "title": {
+      "__id__": 23
+    },
+    "subtitle": {
+      "__id__": 29
+    },
     "hirePriceLabel": {
       "__id__": 108
     },
