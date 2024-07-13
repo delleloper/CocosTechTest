@@ -33,7 +33,7 @@ export class QueueManager extends Component {
     }
 
     addToQueue(element: any) {
-        console.log("QUEE SIZE: " + this.queue.length)
+        console.log("QUEUED");
         if (this.isFull()) {
             return false;
         }
@@ -71,6 +71,7 @@ export class QueueManager extends Component {
 
     private startProcessing() {
         if (this.queue.length > 0) {
+            console.log("START PROCESSING");
             this.currentElement = this.queue[0];
             this.processing = true;
             this.duration = this.currentElement.summonCooldown;
@@ -93,6 +94,7 @@ export class QueueManager extends Component {
     }
 
     ready() {
+        console.log("FINISH PROCESSING");
         this.queueSubject.next({ type: QueueEventType.PROCESS_END, item: this.currentElement });
         this.currentElement = null
         this.queue.shift();
@@ -103,7 +105,7 @@ export class QueueManager extends Component {
         if (this.queueSubject == null) {
             this.queueSubject = new Subject<QueueEvent>();
         }
-        this.queueSubject.subscribe(event => handler(event))
+        return this.queueSubject.subscribe(event => handler(event))
     }
 
 

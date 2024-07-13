@@ -4,6 +4,7 @@ import { UnitCreationPanelController } from './UnitCreationPanelController';
 import { CurrencyManager } from './CurrencyManager';
 import { TowerComponent } from './TowerComponent';
 import { QueueManager } from './QueueManager';
+import { UnitListController } from './UnitListController';
 const { ccclass, property, integer } = _decorator;
 
 @ccclass('UiManager')
@@ -87,7 +88,6 @@ export class UiManager extends Component {
                     this.unitsCreationListPanel.position = target;
                 },
                 onComplete: (target: Vec3, ratio: number) => {
-                    debugger
                     this.unitsCreationListPanel.isReady = true;
                 }
             })
@@ -116,10 +116,15 @@ export class UiManager extends Component {
 
     showUnitsPanel() {
         this.hidePanel();
-        this.unitsListPanel = instantiate(this.unitListPanelPrefab);
-        this.unitsListPanel.setPosition(0, 0, 0);
-        this.node.addChild(this.unitsListPanel);
-        this.queue.subscribe(this.unitsListPanel.eventHandler);
+        if (this.unitsListPanel == null) {
+            this.unitsListPanel = instantiate(this.unitListPanelPrefab);
+            this.unitsListPanel.setPosition(0, 0, 0);
+            this.node.addChild(this.unitsListPanel);
+            let controller = this.unitsListPanel.getComponent(UnitListController);
+            controller.setup(this.gameManager, this.queue);
+        } else {
+            this.unitsListPanel.active = true;
+        }
     }
 
 }

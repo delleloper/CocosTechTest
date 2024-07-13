@@ -1,5 +1,7 @@
-import { _decorator, Button, Component, Node, Prefab } from 'cc';
+import { _decorator, Button, Component, instantiate, Node, Prefab } from 'cc';
 import { QueueManager, QueueEventType, QueueEvent, } from './QueueManager';
+import { GameManager } from './GameManager';
+import { CharacterDataController } from './CharacterDataController';
 const { ccclass, property } = _decorator;
 
 @ccclass('UnitListController')
@@ -10,29 +12,46 @@ export class UnitListController extends Component {
     private closeButton: Button | null;
     @property(Prefab)
     private characterDataPrefab: Prefab | null;
-
-    start(): void {
+    private gameManager: GameManager
+    private queueManager: QueueManager;
+    setup(gameManager: GameManager, queue: QueueManager): void {
+        this.gameManager = gameManager;
+        this.queueManager = queue;
         this.recreateAll()
-        closeButton.on
+        queue.subscribe((event: QueueEvent) => {
+
+            if (event.type = QueueEventType.PROCESS_END) {
+                this.add(event.item)
+            }
+        });
+
     }
 
     recreateAll() {
-        charactersContainer.removeAllChildren();
+        var heroes = this.gameManager.getCreatedHeroes()
+        if (heroes.length > 0) {
+            this.charactersContainer.removeAllChildren();
+            heroes.forEach(element => {
+                this.add(element)
+            });
+        }
     }
 
-    add() {
-        charactersContainer
+    add(characterData) {
+        if (this.characterDataPrefab == null || this.characterDataPrefab == undefined) {
+            console.log("missing prefab")
+            return
+        }
+
+        var charData = instantiate(this.characterDataPrefab);
+        this.charactersContainer.addChild(charData);
+        charData.getComponent(CharacterDataController).setup(characterData);
     }
 
     close() {
-        this.node.destroy();
+        this.node.active = false;
     }
 
-    eventHandler(event: QueueEvent) {
-        if (event.type = QueueEventType.PROCESS_END) {
-            add(event.item)
-        }
-    }
 
 }
 

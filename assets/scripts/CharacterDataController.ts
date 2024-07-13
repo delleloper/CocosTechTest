@@ -21,7 +21,15 @@ export class CharacterDataController extends Component {
 
 
 
-
+    setup(character) {
+        this.characterIcon.setupButton(character);
+        this.rankLabel.string = "Rank:" + character.rank;
+        this.costLabel.string = "Cost:" + character.cost;
+        this.typeLabel.string = "Type:" + character.type;
+        this.summonLabel.string = "Summon Time:" + character.summonCooldown;
+        this.nameLabel.string = character.name;
+        this.descriptionLabel.string = character.description;
+    }
 
 }
 

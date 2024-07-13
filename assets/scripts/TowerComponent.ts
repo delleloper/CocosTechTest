@@ -78,13 +78,13 @@ export class TowerComponent extends Component {
 
             tween(this.rayIcon.node.position)
                 .to(this.durationtime, new Vec3(this.rayIcon.node.position.x, this.rayIcon.node.position.y + movement, 0), {
-                    easing: "rayIcon",
+                    easing: "linear",
                     onUpdate: (target: Vec3, ratio: number) => {
                         this.rayIcon.node.position = target;
                     }
                 })
                 .to(this.durationtime, new Vec3(this.rayIcon.node.position.x, this.rayIcon.node.position.y - movement, 0), {
-                    easing: "rayIcon",
+                    easing: "linear",
                     onUpdate: (target: Vec3, ratio: number) => {
                         this.rayIcon.node.position = target;
                     }

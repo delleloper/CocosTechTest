@@ -1,5 +1,6 @@
 import { _decorator, Component, Node, resources, SpriteFrame } from 'cc';
 import { CurrencyManager } from './CurrencyManager';
+import { QueueEvent, QueueEventType, QueueManager } from './QueueManager';
 const { ccclass, property } = _decorator;
 
 
@@ -10,7 +11,7 @@ export class GameManager extends Component {
   private heroesData = {};
   private startingCurrency: number = 0;
   private buildingsData = {};
-  private createdHeroe = {};
+  private createdHeroes = [];
 
   @property([SpriteFrame])
   public spriteArrayCharacters: SpriteFrame[] = [];
@@ -23,11 +24,19 @@ export class GameManager extends Component {
   private typeIcons: { [key: string]: SpriteFrame } = {};
   private rankIcons: { [key: string]: SpriteFrame } = {};
   private currrencyManager: CurrencyManager;
+  private queueManager: CurrencyManager;
+
 
 
   onLoad() {
     this.loadInitialState();
     this.currrencyManager = this.getComponent(CurrencyManager)
+    this.queueManager = this.getComponent(QueueManager)
+    this.queueManager.subscribe((event: QueueEvent) => {
+      if (event.type == QueueEventType.PROCESS_END) {
+        this.createdHeroes.push(event.item);
+      }
+    })
   }
 
   loadInitialState() {
@@ -95,6 +104,10 @@ export class GameManager extends Component {
 
   getHeroes() {
     return this.heroesData;
+  }
+
+  getCreatedHeroes() {
+    return this.createdHeroes;
   }
 }
 

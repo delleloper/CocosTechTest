@@ -102,9 +102,8 @@ export class UnitCreationPanelController extends Component {
 
     onHireClicked() {
         const result = this.queue.addToQueue(this.selectedHero);
-        this.currencyManager?.spend(this.selectedHero.cost);
-        if (!result) {
-            console.log("QUEUE FULL");
+        if (result) {
+            this.currencyManager?.spend(this.selectedHero.cost);
         }
         this.updateHireButton()
     }
