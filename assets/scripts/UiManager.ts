@@ -1,6 +1,7 @@
-import { _decorator, Component, Node, Prefab, instantiate, UITransform, Input, RichText, input } from 'cc';
+import { _decorator, Component, Node, Prefab, instantiate, UITransform, RichText, } from 'cc';
 import { GameManager } from './GameManager';
 import { UnitCreationPanelController } from './UnitCreationPanelController';
+import { CurrencyManager } from './CurrencyManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('UiManager')
@@ -14,6 +15,8 @@ export class UiManager extends Component {
     private gameManager: GameManager = null;
     @property({ type: RichText })
     private debug: RichText = null;
+    @property(CurrencyManager)
+    private currencyManager: CurrencyManager | null = null;
     private unitsListPanel: Node;
     private unitsCreationListPanel: Node;
 
@@ -39,7 +42,6 @@ export class UiManager extends Component {
     }
 
     onTargetUIClick(event: EventTouch) {
-        // Handle the click on the target UI element
         event.propagationStopped = true;
     }
 
@@ -52,7 +54,7 @@ export class UiManager extends Component {
             this.unitsCreationListPanel = instantiate(this.unitCreationPanelPrefab);
             this.unitsCreationListPanel.setPosition(0, 0, 0);
             this.node.addChild(this.unitsCreationListPanel);
-            this.unitsCreationListPanel.getComponent(UnitCreationPanelController).setup(buildingId, this.gameManager)
+            this.unitsCreationListPanel.getComponent(UnitCreationPanelController).setup(buildingId, this.gameManager, this.currencyManager)
             this.targetUIElement = this.unitsCreationListPanel
             this.targetUIElement.on(Node.EventType.TOUCH_START, this.onTargetUIClick, this);
         } else {

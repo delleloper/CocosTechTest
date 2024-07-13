@@ -1,4 +1,5 @@
 import { _decorator, Component, Node, resources, SpriteFrame } from 'cc';
+import { CurrencyManager } from './CurrencyManager';
 const { ccclass, property } = _decorator;
 
 
@@ -21,11 +22,12 @@ export class GameManager extends Component {
   private heroesPortraits: { [key: string]: SpriteFrame } = {};
   private typeIcons: { [key: string]: SpriteFrame } = {};
   private rankIcons: { [key: string]: SpriteFrame } = {};
-
+  private currrencyManager: CurrencyManager;
 
 
   onLoad() {
     this.loadInitialState();
+    this.currrencyManager = this.getComponent(CurrencyManager)
   }
 
   loadInitialState() {
@@ -35,7 +37,7 @@ export class GameManager extends Component {
         return;
       }
       const jsonData = jsonAsset.json;
-      this.startingCurrency = jsonData.currency;
+      this.currrencyManager.setCurrency(jsonData.state.currency)
     });
 
     resources.load("settings/heroes", (err, jsonAsset) => {
@@ -57,6 +59,7 @@ export class GameManager extends Component {
         });
       })
       this.loadAssets();
+
 
     });
   }

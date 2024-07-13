@@ -1,6 +1,6 @@
 {
     "state":{
-        "currency": 999999999,
+        "currency": 1000,
         "buildings": ["hire_tower"],
         "heroes": []
     }

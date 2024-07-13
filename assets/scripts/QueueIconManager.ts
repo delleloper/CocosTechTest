@@ -41,17 +41,5 @@ export class QueueIconManager extends Component {
     setProgress(value) {
         this.progressBarComponent.progress = value;
     }
-
-    // handleEvent(event: QueueEvent) {
-    //     if(this.currentCharacter == null){
-    //         return
-    //     }
-    //     if (event.type === QueueEventType.PROCESS_END) {
-    //         this.characterReady()
-    //     }
-    //     if (event.type === QueueEventType.PROCESSING) {
-    //         this.progressBarComponent.progress = event.item;
-    //     }
-    // }
 }
 

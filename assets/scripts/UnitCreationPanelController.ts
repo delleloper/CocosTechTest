@@ -4,6 +4,7 @@ import { GameManager } from './GameManager';
 import { CharacterHireButtonController } from './CharacterHireButtonController';
 import { QueueIconManager } from './QueueIconManager';
 import { QueueManager, QueueEventType, QueueEvent } from './QueueManager';
+import { CurrencyManager } from './CurrencyManager';
 
 const { ccclass, property } = _decorator;
 
@@ -25,7 +26,10 @@ export class UnitCreationPanelController extends Component {
     @property(Label)
     private hirePriceLabel: Label | null = null;
 
+
+
     private queue: QueueManager | null
+    private currencyManager: CurrencyManager | null = null
     private selectedButton: CharacterHireButtonController | null = null;
     private selectedHero: any | null = null;
     private currency = 700;
@@ -35,7 +39,9 @@ export class UnitCreationPanelController extends Component {
 
 
 
-    setup(buildingId: string, gameManager: GameManager) {
+
+    setup(buildingId: string, gameManager: GameManager, currencyManager: CurrencyManager) {
+        this.currencyManager = currencyManager;
         const heroes = gameManager.getHeroes();
         const buildingData = gameManager.buildingsData[buildingId];
 
@@ -46,7 +52,7 @@ export class UnitCreationPanelController extends Component {
         this.queue = gameManager.node.getComponent(QueueManager)
 
         this.queue.init(buildingData.settings.hireSlots);
-        this.queue.queueSubject.subscribe(event => this.handleEvent(event));
+        this.queue.subscribe(this.handleEvent.bind(this));
         let buttons = [];
         for (const key in heroes) {
             const hero = heroes[key];
@@ -95,9 +101,11 @@ export class UnitCreationPanelController extends Component {
 
     onHireClicked() {
         const result = this.queue.addToQueue(this.selectedHero);
+        this.currencyManager?.spend(this.selectedHero.cost);
         if (!result) {
             console.log("QUEUE FULL");
         }
+        this.updateHireButton()
     }
 
     handleEvent(event: QueueEvent) {
@@ -115,14 +123,15 @@ export class UnitCreationPanelController extends Component {
 
         }
         this.updateFrames();
+        this.updateHireButton();
     }
 
     updateHireButton() {
         if (this.selectedHero != null) {
-
+            debugger
             this.hirePriceLabel.string = this.selectedHero.cost;
 
-            if (this.selectedHero.cost <= this.currency && !this.queue.isFull()) {
+            if (this.currencyManager?.canAfford(this.selectedHero.cost) && !this.queue.isFull()) {
                 this.hirePriceLabel.color = Color.GREEN
                 this.hireButton.interactable = true;
             } else {

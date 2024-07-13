@@ -24,7 +24,7 @@ export class QueueManager extends Component {
     private currentElement: any;
     private size = 0;
 
-    public queueSubject: Subject<QueueEvent> | null = null;
+    private queueSubject: Subject<QueueEvent> | null = null;
 
 
     init(size) {
@@ -99,6 +99,12 @@ export class QueueManager extends Component {
         this.queue.shift();
 
     }
+
+    subscribe (handler){
+        this.queueSubject.subscribe(event => handler(event))
+    }
+
+
 }
 
 
