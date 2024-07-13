@@ -38,7 +38,6 @@ export class UnitListController extends Component {
 
     add(characterData) {
         if (this.characterDataPrefab == null || this.characterDataPrefab == undefined) {
-            console.log("missing prefab")
             return
         }
 

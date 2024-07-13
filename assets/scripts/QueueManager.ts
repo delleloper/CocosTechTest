@@ -33,7 +33,6 @@ export class QueueManager extends Component {
     }
 
     addToQueue(element: any) {
-        console.log("QUEUED");
         if (this.isFull()) {
             return false;
         }
@@ -71,7 +70,6 @@ export class QueueManager extends Component {
 
     private startProcessing() {
         if (this.queue.length > 0) {
-            console.log("START PROCESSING");
             this.currentElement = this.queue[0];
             this.processing = true;
             this.duration = this.currentElement.summonCooldown;
@@ -94,7 +92,6 @@ export class QueueManager extends Component {
     }
 
     ready() {
-        console.log("FINISH PROCESSING");
         this.queueSubject.next({ type: QueueEventType.PROCESS_END, item: this.currentElement });
         this.currentElement = null
         this.queue.shift();

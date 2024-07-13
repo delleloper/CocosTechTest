@@ -110,17 +110,12 @@ export class UnitCreationPanelController extends Component {
 
     handleEvent(event: QueueEvent) {
         if (event.type === QueueEventType.ENQUEUE) {
-            console.log(`ClassB: Elemento añadido a la cola: ${event.item.id}`);
             const available = this.queueFrames.find(element => element.isAvaliable());
             if (available) {
                 available.setup(event.item);
-            } else {
-                console.log("NO AVALIABLE FRAMES")
             }
         } else if (event.type === QueueEventType.PROCESS_END) {
             this.firstFrame.characterReady();
-            console.log(`ClassB: Finalizando el procesamiento: ${event.item.id}`);
-
         }
         this.updateFrames();
         this.updateHireButton();

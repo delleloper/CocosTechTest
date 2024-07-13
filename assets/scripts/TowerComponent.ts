@@ -36,7 +36,6 @@ export class TowerComponent extends Component {
 
     onClickedTower(event: EventMouse) {
         // manage panel opening
-        console.log("Open creation menu");
         if (!this.uiOpen) {
             this.uiManager.showUnitCreationPanel(buildingId, this);
             this.uiOpen = true
@@ -70,8 +69,6 @@ export class TowerComponent extends Component {
     showIcon() {
         const movement = 30
         if (this.queueProcessing && !this.uiOpen) {
-            console.log("show");
-
             tween(this.opacity)
                 .to(this.durationtime, { opacity: 255 })
                 .start();
