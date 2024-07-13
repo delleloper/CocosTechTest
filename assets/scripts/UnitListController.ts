@@ -19,8 +19,7 @@ export class UnitListController extends Component {
         this.queueManager = queue;
         this.recreateAll()
         queue.subscribe((event: QueueEvent) => {
-
-            if (event.type = QueueEventType.PROCESS_END) {
+            if (event.type == QueueEventType.PROCESS_END) {
                 this.add(event.item)
             }
         });

@@ -23,10 +23,10 @@ export class CharacterDataController extends Component {
 
     setup(character) {
         this.characterIcon.setupButton(character);
-        this.rankLabel.string = "Rank:" + character.rank;
-        this.costLabel.string = "Cost:" + character.cost;
-        this.typeLabel.string = "Type:" + character.type;
-        this.summonLabel.string = "Summon Time:" + character.summonCooldown;
+        this.rankLabel.string = "Rank: " + character.rank.toUpperCase();
+        this.costLabel.string = "Cost: " + character.cost;
+        this.typeLabel.string = "Type: " + character.type.charAt(0).toUpperCase() + character.type.slice(1);
+        this.summonLabel.string = "Summon Time: " + character.summonCooldown + "s";
         this.nameLabel.string = character.name;
         this.descriptionLabel.string = character.description;
     }

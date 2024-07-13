@@ -16,8 +16,6 @@ export class UiManager extends Component {
     private unitListPanelPrefab: Prefab = null;
     @property({ type: GameManager })
     private gameManager: GameManager = null;
-    @property({ type: RichText })
-    private debug: RichText = null;
     @property(CurrencyManager)
     private currencyManager: CurrencyManager | null = null;
     @property(QueueManager)
