@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { _decorator, Button, Color, Component, instantiate, Label, Layout, Node, Prefab, RichText } from 'cc';
+import { _decorator, Button, Color, Component, Input, input, instantiate, Label, Layout, Node, Prefab, RichText, UITransform } from 'cc';
 import { GameManager } from './GameManager';
 import { CharacterHireButtonController } from './CharacterHireButtonController';
 import { QueueIconManager } from './QueueIconManager';
@@ -24,15 +24,15 @@ export class UnitCreationPanelController extends Component {
     private subtitle: RichText | null = null;
     @property(Label)
     private hirePriceLabel: Label | null = null;
-    // @property(QueueManager)
+
     private queue: QueueManager | null
-
-
     private selectedButton: CharacterHireButtonController | null = null;
     private selectedHero: any | null = null;
     private currency = 700;
     private queue_size = 5 //REPLACE
     private firstFrame = null
+
+
 
 
     setup(buildingId: string, gameManager: GameManager) {
@@ -47,33 +47,30 @@ export class UnitCreationPanelController extends Component {
 
         this.queue.init(buildingData.settings.hireSlots);
         this.queue.queueSubject.subscribe(event => this.handleEvent(event));
+        let buttons = [];
         for (const key in heroes) {
             const hero = heroes[key];
             const button = instantiate(this.hirebuttonPrefab);
             this.hirebuttonsContainer.node.addChild(button);
             const buttonController: CharacterHireButtonController = button.getComponent(CharacterHireButtonController)
             buttonController.setupButton(hero);
-            button.on(Button.EventType.CLICK, () => { this.onCharacterClicked(hero, buttonController) })
-
+            buttons.push(buttonController)
+            button.on(Button.EventType.CLICK, () => { this.onCharacterClicked(buttonController) })
         }
+        this.onCharacterClicked(buttons[0])
+        this.firstFrame = this.queueFrames[0];
+
     }
 
-    onCharacterClicked(hero, button: CharacterHireButtonController) {
+    onCharacterClicked(button: CharacterHireButtonController) {
         if (this.selectedButton != null) {
             this.selectedButton.setSelected(false);
         }
         this.selectedButton = button;
         button.setSelected(true);
-        this.hirePriceLabel.string = hero.cost;
-        this.selectedHero = hero;
+        this.selectedHero = button.getCharacter();
+        this.updateHireButton();
 
-        if (hero.cost <= this.currency) {
-            this.hirePriceLabel.color = Color.GREEN
-            this.hireButton.enabled = true;
-        } else {
-            this.hirePriceLabel.color = Color.RED
-            this.hireButton.enabled = false;
-        }
     }
 
     updateFrames() {
@@ -120,12 +117,30 @@ export class UnitCreationPanelController extends Component {
         this.updateFrames();
     }
 
+    updateHireButton() {
+        if (this.selectedHero != null) {
+
+            this.hirePriceLabel.string = this.selectedHero.cost;
+
+            if (this.selectedHero.cost <= this.currency && !this.queue.isFull()) {
+                this.hirePriceLabel.color = Color.GREEN
+                this.hireButton.interactable = true;
+            } else {
+                this.hirePriceLabel.color = Color.RED
+                this.hireButton.interactable = false;
+            }
+        }
+    }
+
+
     update(dt: number) {
-        if (this.queue.isProcessing()) {
+        if (this.queue.isProcessing() && this.firstFrame != null) {
             this.firstFrame.setProgress(this.queue.getProgress());
         }
-        this.hireButton.enabled = !this.queue.isFull();
+
     }
+
+
 
 
 }

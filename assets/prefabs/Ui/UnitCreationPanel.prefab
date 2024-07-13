@@ -2476,7 +2476,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "f31116c8-02e3-4fde-97bb-04c6533ab04a@f9941",
+      "__uuid__": "951249e0-9f16-456d-8b85-a6ca954da16b@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 1,
@@ -2511,7 +2511,7 @@
       "__id__": 126
     },
     "clickEvents": [],
-    "_interactable": true,
+    "_interactable": false,
     "_transition": 2,
     "_normalColor": {
       "__type__": "cc.Color",
