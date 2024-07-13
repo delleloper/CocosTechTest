@@ -20,10 +20,10 @@ export class UnitCreationPanelController extends Component {
     private queueFrames: QueueIconManager[] = [];
     @property(Button)
     private hireButton: Button | null = null;
-    @property(RichText)
-    private title: RichText | null = null;
-    @property(RichText)
-    private subtitle: RichText | null = null;
+    @property(Label)
+    private title: Label | null = null;
+    @property(Label)
+    private subtitle: Label | null = null;
     @property(Label)
     private hirePriceLabel: Label | null = null;
 
@@ -33,7 +33,6 @@ export class UnitCreationPanelController extends Component {
     private currencyManager: CurrencyManager | null = null
     private selectedButton: CharacterHireButtonController | null = null;
     private selectedHero: any | null = null;
-    private currency = 700;
     private firstFrame = null
     private tower: TowerComponent = null
 

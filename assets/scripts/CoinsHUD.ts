@@ -28,7 +28,6 @@ export class CoinsHUD extends Component {
         }
         if (event.type === CurrencyEventType.SPENT) {
             this.spendEffect.string = -event.item
-            debugger
             this.spendEffect.node.position = this.startPosition;
             this.opacity.opacity = 255
             tween(this.opacity)

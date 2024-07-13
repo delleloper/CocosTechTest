@@ -31,6 +31,7 @@ export class UiManager extends Component {
     private unitCreationPanelY: number = 0;
 
     private durationTime = 0.5
+    private panelSize;
 
     start() {
         this.node.on(Node.EventType.TOUCH_START, this.onAnyClick, this);
@@ -68,8 +69,10 @@ export class UiManager extends Component {
         if (this.unitsCreationListPanel == null) {
             this.unitsCreationListPanel = instantiate(this.unitCreationPanelPrefab);
             this.unitsCreationListPanel.isReady = false;
-            this.unitsCreationListPanel.setPosition(0, this.unitCreationPanelHiddenY, 0);
             this.node.addChild(this.unitsCreationListPanel);
+            let trans = this.unitsCreationListPanel.getComponent(UITransform);
+            this.panelSize = trans?.contentSize.height;
+            this.unitsCreationListPanel.setPosition(0, this.unitCreationPanelY - this.panelSize, 0);
             this.unitsCreationListPanel.getComponent(UnitCreationPanelController).setup(buildingId, this.gameManager, this.currencyManager, tower)
             this.targetUIElement = this.unitsCreationListPanel
             this.targetUIElement.on(Node.EventType.TOUCH_START, this.onTargetUIClick, this);
@@ -99,8 +102,9 @@ export class UiManager extends Component {
             return;
         }
         this.unitsCreationListPanel.isReady = false
+
         tween(this.unitsCreationListPanel.position)
-            .to(this.durationTime / 2, new Vec3(0, this.unitCreationPanelHiddenY, 0), {
+            .to(this.durationTime / 2, new Vec3(0, this.unitsCreationListPanel.position.y - this.panelSize, 0), {
                 easing: "linear",
                 onUpdate: (target: Vec3, ratio: number) => {
                     this.unitsCreationListPanel.position = target;
