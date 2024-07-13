@@ -2,7 +2,8 @@ import { _decorator, Component, Node, Prefab, instantiate, UITransform, RichText
 import { GameManager } from './GameManager';
 import { UnitCreationPanelController } from './UnitCreationPanelController';
 import { CurrencyManager } from './CurrencyManager';
-const { ccclass, property } = _decorator;
+import { TowerComponent } from './TowerComponent';
+const { ccclass, property, integer } = _decorator;
 
 @ccclass('UiManager')
 export class UiManager extends Component {
@@ -19,6 +20,11 @@ export class UiManager extends Component {
     private currencyManager: CurrencyManager | null = null;
     private unitsListPanel: Node;
     private unitsCreationListPanel: Node;
+    @integer
+    private unitCreationPanelX: number = 0;
+    @integer
+    private unitCreationPanely: number = 0;
+
 
 
     start() {
@@ -49,14 +55,15 @@ export class UiManager extends Component {
         this.unitsCreationListPanel.active = false;
     }
 
-    showUnitCreationPanel(buildingId: String) {
+    showUnitCreationPanel(buildingId: String, tower: TowerComponent) {
         if (this.unitsCreationListPanel == null) {
             this.unitsCreationListPanel = instantiate(this.unitCreationPanelPrefab);
-            this.unitsCreationListPanel.setPosition(0, 0, 0);
+            this.unitsCreationListPanel.setPosition(this.unitCreationPanelX, this.unitCreationPanely, 0);
             this.node.addChild(this.unitsCreationListPanel);
-            this.unitsCreationListPanel.getComponent(UnitCreationPanelController).setup(buildingId, this.gameManager, this.currencyManager)
+            this.unitsCreationListPanel.getComponent(UnitCreationPanelController).setup(buildingId, this.gameManager, this.currencyManager, tower)
             this.targetUIElement = this.unitsCreationListPanel
             this.targetUIElement.on(Node.EventType.TOUCH_START, this.onTargetUIClick, this);
+
         } else {
             this.unitsCreationListPanel.active = true;
         }

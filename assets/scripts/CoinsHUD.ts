@@ -19,9 +19,7 @@ export class CoinsHUD extends Component {
         }
         if (event.type === CurrencyEventType.CHANGED) {
             this.moneyLabel.string = event.item
-            debugger
-
-        }
+         }
     }
 
 }

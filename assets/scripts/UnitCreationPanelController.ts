@@ -5,6 +5,7 @@ import { CharacterHireButtonController } from './CharacterHireButtonController';
 import { QueueIconManager } from './QueueIconManager';
 import { QueueManager, QueueEventType, QueueEvent } from './QueueManager';
 import { CurrencyManager } from './CurrencyManager';
+import { TowerComponent } from './TowerComponent';
 
 const { ccclass, property } = _decorator;
 
@@ -33,18 +34,18 @@ export class UnitCreationPanelController extends Component {
     private selectedButton: CharacterHireButtonController | null = null;
     private selectedHero: any | null = null;
     private currency = 700;
-    private queue_size = 5 //REPLACE
     private firstFrame = null
+    private tower: TowerComponent = null
 
 
 
 
-
-    setup(buildingId: string, gameManager: GameManager, currencyManager: CurrencyManager) {
+    setup(buildingId: string, gameManager: GameManager, currencyManager: CurrencyManager, tower: TowerComponent) {
         this.currencyManager = currencyManager;
         const heroes = gameManager.getHeroes();
         const buildingData = gameManager.buildingsData[buildingId];
-
+        this.tower = tower;
+        this.queue?.subscribe(tower.onQueue.bind(tower))
         this.title.string = buildingData.name;
         this.subtitle.string = buildingData.description;
         this.hireButton.node.on(Button.EventType.CLICK, this.onHireClicked, this);
@@ -128,7 +129,6 @@ export class UnitCreationPanelController extends Component {
 
     updateHireButton() {
         if (this.selectedHero != null) {
-            debugger
             this.hirePriceLabel.string = this.selectedHero.cost;
 
             if (this.currencyManager?.canAfford(this.selectedHero.cost) && !this.queue.isFull()) {
@@ -147,6 +147,10 @@ export class UnitCreationPanelController extends Component {
             this.firstFrame.setProgress(this.queue.getProgress());
         }
 
+    }
+
+    protected onDisable(): void {
+        this.tower.closedUi()
     }
 
 

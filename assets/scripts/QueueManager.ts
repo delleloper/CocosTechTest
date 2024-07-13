@@ -29,8 +29,7 @@ export class QueueManager extends Component {
 
     init(size) {
         this.size = size;
-        this.queueSubject = new Subject<QueueEvent>();
-
+        this.queue = [];
     }
 
     addToQueue(element: any) {
@@ -100,7 +99,10 @@ export class QueueManager extends Component {
 
     }
 
-    subscribe (handler){
+    subscribe(handler) {
+        if (this.queueSubject == null) {
+            this.queueSubject = new Subject<QueueEvent>();
+        }
         this.queueSubject.subscribe(event => handler(event))
     }
 
