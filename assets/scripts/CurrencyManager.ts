@@ -9,7 +9,7 @@ export enum CurrencyEventType {
     SPENT
 }
 
-export interface QueueEvent {
+export interface CurrencyEvent {
     type: CurrencyEventType;
     item: number;
 }

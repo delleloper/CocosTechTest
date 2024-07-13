@@ -1,8 +1,9 @@
-import { _decorator, Component, Node, Prefab, instantiate, UITransform, RichText, tween, Vec3, } from 'cc';
+import { _decorator, Component, Node, Prefab, instantiate, UITransform, RichText, tween, Vec3, Button, Sprite, } from 'cc';
 import { GameManager } from './GameManager';
 import { UnitCreationPanelController } from './UnitCreationPanelController';
 import { CurrencyManager } from './CurrencyManager';
 import { TowerComponent } from './TowerComponent';
+import { QueueManager } from './QueueManager';
 const { ccclass, property, integer } = _decorator;
 
 @ccclass('UiManager')
@@ -18,6 +19,11 @@ export class UiManager extends Component {
     private debug: RichText = null;
     @property(CurrencyManager)
     private currencyManager: CurrencyManager | null = null;
+    @property(QueueManager)
+    private queue: QueueManager | null;
+    @property(Node)
+    private signpost: Node | null;
+
     private unitsListPanel: Node;
     private unitsCreationListPanel: Node;
     @integer
@@ -29,6 +35,7 @@ export class UiManager extends Component {
 
     start() {
         this.node.on(Node.EventType.TOUCH_START, this.onAnyClick, this);
+        this.signpost.on(Node.EventType.TOUCH_START, this.showUnitsPanel, this);
     }
 
     onAnyClick(event: EventTouch) {
@@ -90,6 +97,9 @@ export class UiManager extends Component {
 
 
     hidePanel() {
+        if (this.unitsCreationListPanel == null) {
+            return;
+        }
         this.unitsCreationListPanel.isReady = false
         tween(this.unitsCreationListPanel.position)
             .to(this.durationTime / 2, new Vec3(0, this.unitCreationPanelHiddenY, 0), {
@@ -102,6 +112,14 @@ export class UiManager extends Component {
                 }
             })
             .start();
+    }
+
+    showUnitsPanel() {
+        this.hidePanel();
+        this.unitsListPanel = instantiate(this.unitListPanelPrefab);
+        this.unitsListPanel.setPosition(0, 0, 0);
+        this.node.addChild(this.unitsListPanel);
+        this.queue.subscribe(this.unitsListPanel.eventHandler);
     }
 
 }

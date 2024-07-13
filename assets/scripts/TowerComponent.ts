@@ -29,6 +29,7 @@ export class TowerComponent extends Component {
 
     onLoad() {
         this.towerSprite.node.on(Input.EventType.MOUSE_DOWN, this.onClickedTower, this);
+
         this.QueueManager.subscribe(this.onQueue.bind(this));
         this.opacity.opacity = 0;
     }
