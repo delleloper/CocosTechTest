@@ -21,7 +21,7 @@ export class TowerComponent extends Component {
     public opacity: UIOpacity | null = null;
 
 
-    private durationtime = 0.5;
+    private durationtime = 0.3;
     private queueProcessing = false;
     private uiOpen = false;
 
@@ -36,9 +36,11 @@ export class TowerComponent extends Component {
     onClickedTower(event: EventMouse) {
         // manage panel opening
         console.log("Open creation menu");
-        this.uiManager.showUnitCreationPanel(buildingId, this);
-        this.uiOpen = true
-        this.hideIcon();
+        if (!this.uiOpen) {
+            this.uiManager.showUnitCreationPanel(buildingId, this);
+            this.uiOpen = true
+            this.hideIcon();
+        }
     }
 
     onQueue(event: QueueEvent) {
@@ -59,12 +61,9 @@ export class TowerComponent extends Component {
     }
 
     hideIcon() {
-        console.log("hide");
         tween(this.opacity)
             .to(this.durationtime, { opacity: 0 })
             .start();
-
-
     }
 
     showIcon() {

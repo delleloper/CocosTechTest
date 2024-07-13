@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Prefab, instantiate, UITransform, RichText, } from 'cc';
+import { _decorator, Component, Node, Prefab, instantiate, UITransform, RichText, tween, Vec3, } from 'cc';
 import { GameManager } from './GameManager';
 import { UnitCreationPanelController } from './UnitCreationPanelController';
 import { CurrencyManager } from './CurrencyManager';
@@ -21,18 +21,18 @@ export class UiManager extends Component {
     private unitsListPanel: Node;
     private unitsCreationListPanel: Node;
     @integer
-    private unitCreationPanelX: number = 0;
+    private unitCreationPanelHiddenY: number = 0;
     @integer
-    private unitCreationPanely: number = 0;
+    private unitCreationPanelY: number = 0;
 
-
+    private durationTime = 0.5
 
     start() {
         this.node.on(Node.EventType.TOUCH_START, this.onAnyClick, this);
     }
 
     onAnyClick(event: EventTouch) {
-        if (this.targetUIElement) {
+        if (this.targetUIElement && this.targetUIElement.active) {
             const clickLocation = event.getUILocation();
             const uiTransform = this.targetUIElement.getComponent(UITransform);
 
@@ -52,22 +52,58 @@ export class UiManager extends Component {
     }
 
     handleClickOutside() {
-        this.unitsCreationListPanel.active = false;
+        if (this.unitsCreationListPanel.isReady) {
+            this.hidePanel();
+        }
+
     }
 
     showUnitCreationPanel(buildingId: String, tower: TowerComponent) {
         if (this.unitsCreationListPanel == null) {
             this.unitsCreationListPanel = instantiate(this.unitCreationPanelPrefab);
-            this.unitsCreationListPanel.setPosition(this.unitCreationPanelX, this.unitCreationPanely, 0);
+            this.unitsCreationListPanel.isReady = false;
+            this.unitsCreationListPanel.setPosition(0, this.unitCreationPanelHiddenY, 0);
             this.node.addChild(this.unitsCreationListPanel);
             this.unitsCreationListPanel.getComponent(UnitCreationPanelController).setup(buildingId, this.gameManager, this.currencyManager, tower)
             this.targetUIElement = this.unitsCreationListPanel
             this.targetUIElement.on(Node.EventType.TOUCH_START, this.onTargetUIClick, this);
 
         } else {
+            this.unitsCreationListPanel.isReady = false
             this.unitsCreationListPanel.active = true;
         }
+
+        tween(this.unitsCreationListPanel.position)
+            .to(this.durationTime, new Vec3(0, this.unitCreationPanelY, 0), {
+                easing: "linear",
+                onUpdate: (target: Vec3, ratio: number) => {
+                    this.unitsCreationListPanel.position = target;
+                },
+                onComplete: (target: Vec3, ratio: number) => {
+                    debugger
+                    this.unitsCreationListPanel.isReady = true;
+                }
+            })
+            .start();
+
     }
+
+
+    hidePanel() {
+        this.unitsCreationListPanel.isReady = false
+        tween(this.unitsCreationListPanel.position)
+            .to(this.durationTime / 2, new Vec3(0, this.unitCreationPanelHiddenY, 0), {
+                easing: "linear",
+                onUpdate: (target: Vec3, ratio: number) => {
+                    this.unitsCreationListPanel.position = target;
+                },
+                onComplete: (target: Vec3, ratio: number) => {
+                    this.unitsCreationListPanel.active = false;
+                }
+            })
+            .start();
+    }
+
 }
 
 

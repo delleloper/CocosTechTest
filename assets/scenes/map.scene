@@ -518,8 +518,8 @@
     "currencyManager": {
       "__id__": 5
     },
-    "unitCreationPanelX": 0,
-    "unitCreationPanely": -610,
+    "unitCreationPanelHiddenY": -1316,
+    "unitCreationPanelY": -600,
     "_id": "176mG5wN9Ii5i4Ut85j+UE"
   },
   {
